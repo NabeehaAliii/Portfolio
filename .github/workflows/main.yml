@@ -1,0 +1,36 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - master
+      
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 024848440143.dkr.ecr.ap-south-1.amazonaws.com
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t cicd_portfolio:latest .
+          docker tag cicd_portfolio:latest 024848440143.dkr.ecr.ap-south-1.amazonaws.com/cicd_portfolio:latest
+          docker push 024848440143.dkr.ecr.ap-south-1.amazonaws.com/cicd_portfolio:latest
+
+      - name: Deploy to Amazon ECS
+        run: |
+          aws ecs update-service --cluster new_portfolio_cluster --service cicd_portfolio_service --force-new-deployment
