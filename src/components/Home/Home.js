@@ -21,8 +21,9 @@ function Home() {
               </h1>
 
               <h1 className="heading-name">
+                  This is Automated
                 I'M
-                <strong className="main-name"> Nabeeha Ali</strong>
+                <strong className="main-name"> Soumyajit Behera</strong>
               </h1>
 
               <div style={{ padding: 50, textAlign: "left" }}>
