@@ -21,7 +21,6 @@ function Home() {
               </h1>
 
               <h1 className="heading-name">
-                  This is Automated
                 I'M
                 <strong className="main-name"> Soumyajit Behera</strong>
               </h1>
